@@ -1,4 +1,4 @@
-import { useReducer, createContext, ReactNode, useContext } from "react";
+import { useReducer, createContext, ReactNode, useContext, useEffect } from "react";
 import { Contact, ContactList } from "../Common/types/types";
 import {
   getContactListFromLocalStorage,
@@ -20,11 +20,15 @@ interface ContactListProviderProps {
 export const ContactListProvider: React.FC<ContactListProviderProps> = ({
   children,
 }) => {
-  const initialContactList = getContactListFromLocalStorage();
+
   const [contactList, dispatch] = useReducer(
     contactListReducer,
-    initialContactList
+    getContactListFromLocalStorage()
   );
+
+  useEffect(() => {
+    setContactListToLocalStorage(contactList);
+  },[contactList])
 
   return (
     <ContactListContext.Provider value={contactList}>
