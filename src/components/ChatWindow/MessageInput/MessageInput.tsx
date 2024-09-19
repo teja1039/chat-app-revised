@@ -18,7 +18,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
     if (!message) return;
     const newMessage = {
       content: message,
-      time: getCurrentTime(),
+      sentTime: getCurrentTime(),
     };
     handleSendMessage(newMessage);
     scrollToBottom();

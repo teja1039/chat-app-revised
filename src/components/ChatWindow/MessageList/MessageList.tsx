@@ -48,7 +48,7 @@ const MessageList: React.FC<MessageListProps> = ({
     newMessageList[selectedMessageIndex] = {
       ...newMessageList[selectedMessageIndex],
       content: newMessageContent ?? "",
-      time: "Edited " + getCurrentTime(),
+      sentTime: "Edited " + getCurrentTime(),
     };
     setMessageList(newMessageList);
   },[messageList, selectedMessageIndex]);

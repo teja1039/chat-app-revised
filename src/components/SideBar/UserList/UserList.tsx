@@ -4,22 +4,22 @@ import Modal, { ModalType } from "../../Common/Modal/Modal";
 import { DEFAULT_USER } from "../../Common/constants";
 import { setMessageListToLocalStorage } from "../../Common/localStorageFunctions";
 import UserCard from "./UserCard/UserCard";
+import { useContactList, useContactListDipatch } from "../../MainContainer/ContactListProvider";
 
 interface UserListProps {
   currentUser: User;
   setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
-  userList: User[];
-  setUserList: React.Dispatch<React.SetStateAction<User[]>>;
   isCompact: boolean;
 }
 
 const UserList: (userListPros: UserListProps) => JSX.Element = ({
   currentUser,
   setCurrentUser,
-  userList,
-  setUserList,
   isCompact,
 }) => {
+
+  const contactList = useContactList();
+  const contactListDispatch = useContactListDipatch();
   const [deleteUserModal, setDeleteUserModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState("");
 
@@ -29,9 +29,10 @@ const UserList: (userListPros: UserListProps) => JSX.Element = ({
   }, []);
 
   const handleDeleteUserModal = useCallback(() => {
-    setUserList((prevUserList) =>
-      prevUserList.filter((user) => user.id !== selectedUserId)
-    );
+    contactListDispatch({
+      type: 'delete_contact',
+      id: selectedUserId,
+    });
     if (selectedUserId === currentUser.id) setCurrentUser(DEFAULT_USER);
     setMessageListToLocalStorage(selectedUserId, []);
     setDeleteUserModal(false);
@@ -39,12 +40,12 @@ const UserList: (userListPros: UserListProps) => JSX.Element = ({
 
   return (
     <div className="user-list">
-      {userList.map((user) => {
+      {contactList.map((contact) => {
         return (
           <UserCard
-            user={user}
-            key={user.id}
-            isCurrentUser = {currentUser.id === user.id}
+            user={contact}
+            key={contact.id}
+            isCurrentUser = {currentUser.id === contact.id}
             isCompact={isCompact}
             setCurrentUser={setCurrentUser}
             handleDeleteUser={handleDeleteUser}

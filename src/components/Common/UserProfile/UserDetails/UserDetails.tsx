@@ -1,10 +1,10 @@
 import React from "react";
-import { User } from "../../types/types";
+import { Contact, User } from "../../types/types";
 import { truncateTo25Chars } from "../../util";
 
 
 interface UserDetailsProps {
-  user: User;
+  user: Contact;
   diplayLastMessage?: boolean;
 }
 

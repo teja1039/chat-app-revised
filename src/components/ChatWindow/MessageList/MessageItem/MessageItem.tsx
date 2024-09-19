@@ -21,7 +21,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
     <div className="message-container">
       <div className="message">
         <p className="message-content">{message.content}</p>
-        {isCompact || <p className="message-time">{message.time}</p>}
+        {isCompact || <p className="message-time">{message.sentTime}</p>}
       </div>
       <div className="message-button-container">
         <button

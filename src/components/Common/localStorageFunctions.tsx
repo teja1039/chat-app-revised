@@ -1,4 +1,4 @@
-import { Message, User } from "./types/types";
+import { ContactList, Message, User } from "./types/types";
 
 export const getUserListFromLocalStorage: () => User[] = () => {
   const users = localStorage.getItem(`UserList`);
@@ -21,4 +21,15 @@ export const setMessageListToLocalStorage: (
   messageList: Message[]
 ) => void = (userId, messageList) => {
   localStorage.setItem(`${userId}_messages`, JSON.stringify(messageList));
+};
+
+export const getContactListFromLocalStorage: () => ContactList = () => {
+  const contactList = localStorage.getItem(`ContactList`);
+  return contactList ? JSON.parse(contactList) : [];
+};
+
+export const setContactListToLocalStorage: (contactList: ContactList) => void = (
+ contactList
+) => {
+  localStorage.setItem("ContactList", JSON.stringify(contactList));
 };

@@ -1,10 +1,10 @@
 import UserProfile from "../../../Common/UserProfile/UserProfile";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { User } from "../../../Common/types/types";
+import { Contact, User } from "../../../Common/types/types";
 import React, { memo } from "react";
 
 interface UserCardProps {
-  user: User,
+  user: Contact,
   isCurrentUser: boolean,
   isCompact: boolean,
   setCurrentUser: React.Dispatch<React.SetStateAction<User>>,
@@ -41,7 +41,7 @@ const UserCard: React.FC<UserCardProps> = ({
           >
             <DeleteIcon fontSize="inherit" />
           </button>
-          {isCompact || <p className="timestamp">{user.lastMessage?.time}</p>}
+          {isCompact || <p className="timestamp">{user.lastMessage?.sentTime}</p>}
         </div>
       </div>
     </>
