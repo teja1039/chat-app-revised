@@ -1,8 +1,8 @@
 import { useState } from "react";
 import SideBar from "../SideBar/SideBar";
-import ChatWindow from "./ChatWindow";
-import { ContactListProvider } from "../MainContainer/ContactListProvider";
-import { CurrentUserProvider } from "../MainContainer/CurrentUserProvider";
+import ChatWindow from "../ChatWindow/ChatWindow";
+import { ContactListProvider } from "./ContactListProvider";
+import { CurrentUserProvider } from "./CurrentUserProvider";
 
 const MainContainer: () => JSX.Element = () => {
   const [isCompact, setIsCompact] = useState(false);
