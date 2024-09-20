@@ -7,7 +7,7 @@ interface UserCardProps {
   user: Contact,
   isCurrentContact: boolean,
   isCompact: boolean,
-  setCurrentContact: React.Dispatch<React.SetStateAction<User>>,
+  setCurrentContact: (user : User) => void,
   handleDeleteUser: (index: string) => void
 }
 

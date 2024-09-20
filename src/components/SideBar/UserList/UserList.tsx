@@ -1,23 +1,27 @@
 import { User } from "../../Common/types/types";
 import { useCallback, useState } from "react";
 import Modal, { ModalType } from "../../Common/Modal/Modal";
-import { DEFAULT_CONTACT } from "../../Common/constants";
+import { DEFAULT_USER } from "../../Common/constants";
 import { setMessageListToLocalStorage } from "../../Common/localStorageFunctions";
 import UserCard from "./UserCard/UserCard";
-import { useContactList, useContactListDipatch } from "../../MainContainer/ContactListProvider";
+import {
+  useContactList,
+  useContactListDipatch,
+} from "../../MainContainer/ContactListProvider";
+import {
+  useCurrentUser,
+  useCurrentUserSetState,
+} from "../../MainContainer/CurrentUserProvider";
 
 interface UserListProps {
-  currentContact: User;
-  setCurrentContact: React.Dispatch<React.SetStateAction<User>>;
   isCompact: boolean;
 }
 
 const UserList: (userListPros: UserListProps) => JSX.Element = ({
-  currentContact,
-  setCurrentContact,
   isCompact,
 }) => {
-
+  const currentUser = useCurrentUser();
+  const setCurrentUser = useCurrentUserSetState();
   const contactList = useContactList();
   const contactListDispatch = useContactListDipatch();
   const [deleteUserModal, setDeleteUserModal] = useState(false);
@@ -30,13 +34,13 @@ const UserList: (userListPros: UserListProps) => JSX.Element = ({
 
   const handleDeleteUserModal = useCallback(() => {
     contactListDispatch({
-      type: 'delete_contact',
+      type: "delete_contact",
       id: selectedUserId,
     });
-    if (selectedUserId === currentContact.id) setCurrentContact(DEFAULT_CONTACT);
+    if (selectedUserId === currentUser.id) setCurrentUser(DEFAULT_USER);
     setMessageListToLocalStorage(selectedUserId, []);
     setDeleteUserModal(false);
-  }, [selectedUserId, currentContact]);
+  }, [selectedUserId, currentUser.id]);
 
   return (
     <div className="user-list">
@@ -45,9 +49,9 @@ const UserList: (userListPros: UserListProps) => JSX.Element = ({
           <UserCard
             user={contact}
             key={contact.id}
-            isCurrentContact = {currentContact.id === contact.id}
+            isCurrentContact={currentUser.id === contact.id}
             isCompact={isCompact}
-            setCurrentContact={setCurrentContact}
+            setCurrentContact={setCurrentUser}
             handleDeleteUser={handleDeleteUser}
           />
         );

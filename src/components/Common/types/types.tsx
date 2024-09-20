@@ -21,3 +21,4 @@ export interface Contact extends User {
 }
 
 export type ContactList = Contact[];
+export type MessageList = Message[];

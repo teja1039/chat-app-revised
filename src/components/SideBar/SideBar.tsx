@@ -1,22 +1,17 @@
-import { useCallback, useContext, useState } from "react";
-import { User } from "../Common/types/types";
+import { useCallback, useState } from "react";
 import UserList from "./UserList/UserList";
 import Modal, { ModalType } from "../Common/Modal/Modal";
 import { v4 as uuidv4 } from "uuid";
 import SideBarHeader from "./SideBarHeader/SideBarHeader";
 import NewUserButton from "./NewUserButton/NewUserButton";
-import { useContactList, useContactListDipatch } from "../MainContainer/ContactListProvider";
+import { useContactListDipatch } from "../MainContainer/ContactListProvider";
 
 interface SideBarProps {
-  currentContact: User;
-  setCurrentContact: React.Dispatch<React.SetStateAction<User>>;
   isCompact: boolean;
   setIsCompact: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SideBar: React.FC<SideBarProps> = ({
-  currentContact,
-  setCurrentContact,
   isCompact,
   setIsCompact,
 }) => {
@@ -41,8 +36,6 @@ const SideBar: React.FC<SideBarProps> = ({
       <SideBarHeader setIsCompact={setIsCompact}/>
       <NewUserButton setNewUserModal={setNewUserModal} />
       <UserList
-        currentContact={currentContact}
-        setCurrentContact={setCurrentContact}
         isCompact={isCompact}
       />
       {newUserModal && (

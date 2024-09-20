@@ -3,58 +3,69 @@ import { Message } from "../../Common/types/types";
 import Modal, { ModalType } from "../../Common/Modal/Modal";
 import { getCurrentTime } from "../../Common/util";
 import MessageItem from "./MessageItem/MessageItem";
-import { useConversationDispatch } from "../../MainContainer/ConversationProvider";
+import {
+  useMessageList,
+  useMessageListDispatch,
+} from "../../MainContainer/MessageListProvider";
 
 interface MessageListProps {
   isCompact: boolean;
-  messageList: Message[];
   messageListRef: React.RefObject<HTMLDivElement>;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
   isCompact,
-  messageList,
   messageListRef,
 }) => {
   const [deleteMessageModal, setDeleteMessageModal] = useState(false);
   const [editMessageModal, setEditMessageModal] = useState(false);
   const [selectedMessageIndex, setSeletedMessageIndex] = useState<number>(-1);
-  const conversationDispatch = useConversationDispatch();
+  const messageListDispatch = useMessageListDispatch();
+  const messageList = useMessageList();
 
-  const handleRemoveMessage = useCallback((index: number) => {
-    setSeletedMessageIndex(index);
-    setDeleteMessageModal(true);
-  }, []);
+  const handleClick = (action: { type: string; index: number }) => {
+    setSeletedMessageIndex(action.index);
+    switch (action.type) {
+      case "delete_message": {
+        setDeleteMessageModal(true);
+        return;
+      }
 
-  const handleEditMessage = useCallback((index: number) => {
-    setSeletedMessageIndex(index);
-    setEditMessageModal(true);
-  }, []);
+      case "edit_message": {
+        setEditMessageModal(true);
+        return;
+      }
 
-  const handleRemoveMessageModal = useCallback(() => {
-    conversationDispatch({
-      type: 'delete_message',
-      newMessage: messageList[selectedMessageIndex]
-    })
+      default: {
+        console.log("No action " + action.type);
+      }
+    }
+  };
+
+  const handleRemoveMessageModal = () => {
+    messageListDispatch({
+      type: "delete_message",
+      newMessage: messageList[selectedMessageIndex],
+    });
     setDeleteMessageModal(false);
-  },[selectedMessageIndex]);
+  };
 
   // Can be optimized to remove messageList dependency
-  const handleEditMessageModal: (newMessageContent?: string) => void = useCallback((
+  const handleEditMessageModal: (newMessageContent?: string) => void = (
     newMessageContent
   ) => {
     setEditMessageModal(false);
     if (newMessageContent === messageList[selectedMessageIndex].content) return;
 
-    conversationDispatch({
+    messageListDispatch({
       type: "edit_message",
       newMessage: {
         ...messageList[selectedMessageIndex],
         content: newMessageContent ?? "",
         sentTime: "Edited " + getCurrentTime(),
-      }
+      },
     });
-  },[messageList, selectedMessageIndex]);
+  };
 
   return (
     <>
@@ -67,8 +78,7 @@ const MessageList: React.FC<MessageListProps> = ({
             message={message}
             index={index}
             isCompact={isCompact}
-            handleRemoveMessage={handleRemoveMessage}
-            handleEditMessage={handleEditMessage}
+            handleClick={handleClick}
           />
         ))}
       </div>

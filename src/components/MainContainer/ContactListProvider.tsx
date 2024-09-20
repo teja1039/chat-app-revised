@@ -1,5 +1,11 @@
-import { useReducer, createContext, ReactNode, useContext, useEffect } from "react";
-import { Contact, ContactList } from "../Common/types/types";
+import {
+  useReducer,
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+} from "react";
+import { Contact, ContactList, Message } from "../Common/types/types";
 import {
   getContactListFromLocalStorage,
   setContactListToLocalStorage,
@@ -19,7 +25,6 @@ interface ContactListProviderProps {
 export const ContactListProvider: React.FC<ContactListProviderProps> = ({
   children,
 }) => {
-
   const [contactList, dispatch] = useReducer(
     contactListReducer,
     getContactListFromLocalStorage()
@@ -27,7 +32,7 @@ export const ContactListProvider: React.FC<ContactListProviderProps> = ({
 
   useEffect(() => {
     setContactListToLocalStorage(contactList);
-  },[contactList])
+  }, [contactList]);
 
   return (
     <ContactListContext.Provider value={contactList}>
@@ -47,9 +52,10 @@ export const useContactListDipatch = () => {
 };
 
 interface ContactListAction {
-  type: string;
-  id: string;
-  name?: string;
+  type: string,
+  id: string,
+  name?: string,
+  lastMessage?: Message,
 }
 interface ContactListReducer {
   (contactList: ContactList, action: ContactListAction): ContactList;
@@ -70,6 +76,14 @@ const contactListReducer: ContactListReducer = (contactList, action) => {
 
     case "delete_contact": {
       return [...contactList].filter((contact) => contact.id !== action.id);
+    }
+
+    case "change_last_message": {
+      return [...contactList].map((contact) =>
+        contact.id === action.id
+          ? { ...contact, lastMessage: action.lastMessage }
+          : contact
+      );
     }
 
     default: {

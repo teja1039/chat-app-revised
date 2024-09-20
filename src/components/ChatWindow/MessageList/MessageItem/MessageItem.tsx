@@ -4,18 +4,19 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { memo } from "react";
 
 interface MessageItemProps {
-  message: Message;
-  index: number;
-  isCompact: boolean;
-  handleRemoveMessage: (index: number) => void;
-  handleEditMessage: (index: number) => void;
+  message: Message,
+  index: number,
+  isCompact: boolean,
+  handleClick : (action : {
+    type: string,
+    index: number
+  }) => void
 }
 const MessageItem: React.FC<MessageItemProps> = ({
   message,
   index,
   isCompact,
-  handleRemoveMessage,
-  handleEditMessage,
+  handleClick
 }) => {
   return (
     <div className="message-container">
@@ -28,7 +29,10 @@ const MessageItem: React.FC<MessageItemProps> = ({
           className="message-edit-button"
           onClick={(e) => {
             e.stopPropagation();
-            handleEditMessage(index);
+            handleClick({
+              type: "edit_message",
+              index: index
+            });
           }}
         >
           <EditIcon fontSize="inherit" />
@@ -37,7 +41,10 @@ const MessageItem: React.FC<MessageItemProps> = ({
           className="message-delete-button"
           onClick={(e) => {
             e.stopPropagation();
-            handleRemoveMessage(index);
+            handleClick({
+              type: "delete_message",
+              index: index
+            });
           }}
         >
           <DeleteIcon fontSize="inherit" />

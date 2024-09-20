@@ -2,27 +2,31 @@ import { useState, useRef, memo } from "react";
 import { Message } from "../../Common/types/types";
 import { getCurrentTime } from "../../Common/util";
 import { v4 as uuidv4 } from "uuid";
+import { useMessageListDispatch } from "../../MainContainer/MessageListProvider";
 
 interface MessageInputProps {
-  handleSendMessage: (newMessage: Message) => void;
   scrollToBottom: () => void;
 }
 
 const MessageInput: React.FC<MessageInputProps> = ({
-  handleSendMessage,
   scrollToBottom,
 }) => {
   const [message, setMessage] = useState("");
   const inputMessageRef = useRef<HTMLTextAreaElement>(null);
 
+  const messageListDispatch = useMessageListDispatch();
+
   const handleClick = () => {
     if (!message) return;
-    const newMessage = {
+    const newMessage: Message = {
       id: uuidv4(),
       content: message,
       sentTime: getCurrentTime(),
     };
-    handleSendMessage(newMessage);
+    messageListDispatch({
+      type: 'add_message',
+      newMessage: newMessage
+    });
     scrollToBottom();
     setMessage("");
   };

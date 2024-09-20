@@ -1,18 +1,15 @@
 import MessageList from "./MessageList/MessageList";
 import MessageInput from "./MessageInput/MessageInput";
-import { User, Message } from "../Common/types/types";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { DEFAULT_CONTACT } from "../Common/constants";
+import React, { useCallback, useRef } from "react";
 import ChatWindowHeader from "./ChatWindowHeader/ChatWindowHeader";
-import { useConversation, useConversationDispatch } from "../MainContainer/ConversationProvider";
+import { MessageListProvider } from "../MainContainer/MessageListProvider";
+import { useCurrentUser } from "../MainContainer/CurrentUserProvider";
 
 interface ChatWindowProps {
   isCompact: boolean;
 }
 
-const ChatWindow: React.FC<ChatWindowProps> = ({
-  isCompact,
-}) => {
+const ChatWindow: React.FC<ChatWindowProps> = ({ isCompact }) => {
   const messageListRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = useCallback(() => {
@@ -21,29 +18,18 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     }
   }, []);
 
-  const conversation = useConversation();
-  const conversationDispatch = useConversationDispatch();
-  const handleSendMessage = (newMessage: Message) => {
-    conversationDispatch({
-      type: 'add_message',
-      newMessage: newMessage
-    })
-  }
-
-  if (!conversation || conversation?.withUser === DEFAULT_CONTACT) return <></>;
+  const currentUser = useCurrentUser();
 
   return (
     <div className="chat-window">
-      <ChatWindowHeader user={conversation.withUser} />
-      <MessageList
-        isCompact={isCompact}
-        messageList={conversation.messages}
-        messageListRef={messageListRef}
-      />
-      <MessageInput
-        handleSendMessage={handleSendMessage}
-        scrollToBottom={scrollToBottom}
-      />
+      <MessageListProvider>
+        <ChatWindowHeader user={currentUser} />
+        <MessageList
+          isCompact={isCompact}
+          messageListRef={messageListRef}
+        />
+        <MessageInput scrollToBottom={scrollToBottom} />
+      </MessageListProvider>
     </div>
   );
 };
