@@ -2,21 +2,16 @@ import MessageList from "./MessageList/MessageList";
 import MessageInput from "./MessageInput/MessageInput";
 import { User, Message } from "../Common/types/types";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { DEFAULT_USER } from "../Common/constants";
+import { DEFAULT_CONTACT } from "../Common/constants";
 import ChatWindowHeader from "./ChatWindowHeader/ChatWindowHeader";
+import { useConversation, useConversationDispatch } from "../MainContainer/ConversationProvider";
 
 interface ChatWindowProps {
-  user: User;
   isCompact: boolean;
-  messageList: Message[];
-  setMessageList: React.Dispatch<React.SetStateAction<Message[]>>;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
-  user,
   isCompact,
-  messageList,
-  setMessageList,
 }) => {
   const messageListRef = useRef<HTMLDivElement>(null);
 
@@ -26,19 +21,23 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     }
   }, []);
 
-  const handleSendMessage = useCallback((newMessage: Message) => {
-    setMessageList((prevMessageList) => [...prevMessageList, newMessage]);
-  }, []);
+  const conversation = useConversation();
+  const conversationDispatch = useConversationDispatch();
+  const handleSendMessage = (newMessage: Message) => {
+    conversationDispatch({
+      type: 'add_message',
+      newMessage: newMessage
+    })
+  }
 
-  if (user === DEFAULT_USER) return <></>;
+  if (!conversation || conversation?.withUser === DEFAULT_CONTACT) return <></>;
 
   return (
     <div className="chat-window">
-      <ChatWindowHeader user={user} />
+      <ChatWindowHeader user={conversation.withUser} />
       <MessageList
         isCompact={isCompact}
-        messageList={messageList}
-        setMessageList={setMessageList}
+        messageList={conversation.messages}
         messageListRef={messageListRef}
       />
       <MessageInput

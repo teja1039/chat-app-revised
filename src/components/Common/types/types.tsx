@@ -5,15 +5,15 @@ export interface User {
 }
 
 export interface Message {
+    id: string,
     content: string,
-    sentTime: string
+    sentTime: string,
+    toUser?: boolean, 
 }
 
 export interface Conversation {
-    fromUser : User,
-    toUser : User,
-    messagesToUser : Message[],
-    messagesFromUser : Message[] 
+    withUser: User,
+    messages : Message[]
 }
 
 export interface Contact extends User {

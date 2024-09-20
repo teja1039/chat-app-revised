@@ -1,6 +1,7 @@
 import { useState, useRef, memo } from "react";
 import { Message } from "../../Common/types/types";
 import { getCurrentTime } from "../../Common/util";
+import { v4 as uuidv4 } from "uuid";
 
 interface MessageInputProps {
   handleSendMessage: (newMessage: Message) => void;
@@ -17,6 +18,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   const handleClick = () => {
     if (!message) return;
     const newMessage = {
+      id: uuidv4(),
       content: message,
       sentTime: getCurrentTime(),
     };

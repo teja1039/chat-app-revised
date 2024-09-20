@@ -1,5 +1,5 @@
 import UserProfile from "../../Common/UserProfile/UserProfile";
-import { DEFAULT_USER } from "../../Common/constants";
+import { DEFAULT_CONTACT } from "../../Common/constants";
 import { memo } from "react";
 
 interface SideBarHeaderProps {
@@ -10,7 +10,7 @@ const SideBarHeader: React.FC<SideBarHeaderProps> = ({ setIsCompact }) => {
   return (
     <div className="sidebar-header-container">
       <div className="sidebar-header">
-        <UserProfile user={DEFAULT_USER} />
+        <UserProfile user={DEFAULT_CONTACT} />
         <button
           className="compact-toggle-button"
           onClick={() => setIsCompact((isCompact) => !isCompact)}

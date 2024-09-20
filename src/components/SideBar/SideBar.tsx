@@ -8,15 +8,15 @@ import NewUserButton from "./NewUserButton/NewUserButton";
 import { useContactList, useContactListDipatch } from "../MainContainer/ContactListProvider";
 
 interface SideBarProps {
-  currentUser: User;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
+  currentContact: User;
+  setCurrentContact: React.Dispatch<React.SetStateAction<User>>;
   isCompact: boolean;
   setIsCompact: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SideBar: React.FC<SideBarProps> = ({
-  currentUser,
-  setCurrentUser,
+  currentContact,
+  setCurrentContact,
   isCompact,
   setIsCompact,
 }) => {
@@ -41,8 +41,8 @@ const SideBar: React.FC<SideBarProps> = ({
       <SideBarHeader setIsCompact={setIsCompact}/>
       <NewUserButton setNewUserModal={setNewUserModal} />
       <UserList
-        currentUser={currentUser}
-        setCurrentUser={setCurrentUser}
+        currentContact={currentContact}
+        setCurrentContact={setCurrentContact}
         isCompact={isCompact}
       />
       {newUserModal && (

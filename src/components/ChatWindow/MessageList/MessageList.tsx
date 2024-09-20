@@ -3,23 +3,23 @@ import { Message } from "../../Common/types/types";
 import Modal, { ModalType } from "../../Common/Modal/Modal";
 import { getCurrentTime } from "../../Common/util";
 import MessageItem from "./MessageItem/MessageItem";
+import { useConversationDispatch } from "../../MainContainer/ConversationProvider";
 
 interface MessageListProps {
   isCompact: boolean;
   messageList: Message[];
-  setMessageList: React.Dispatch<React.SetStateAction<Message[]>>;
   messageListRef: React.RefObject<HTMLDivElement>;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
   isCompact,
   messageList,
-  setMessageList,
   messageListRef,
 }) => {
   const [deleteMessageModal, setDeleteMessageModal] = useState(false);
   const [editMessageModal, setEditMessageModal] = useState(false);
   const [selectedMessageIndex, setSeletedMessageIndex] = useState<number>(-1);
+  const conversationDispatch = useConversationDispatch();
 
   const handleRemoveMessage = useCallback((index: number) => {
     setSeletedMessageIndex(index);
@@ -32,9 +32,10 @@ const MessageList: React.FC<MessageListProps> = ({
   }, []);
 
   const handleRemoveMessageModal = useCallback(() => {
-    setMessageList((prevMessageList) =>
-      [...prevMessageList].filter((_, i) => i !== selectedMessageIndex)
-    );
+    conversationDispatch({
+      type: 'delete_message',
+      newMessage: messageList[selectedMessageIndex]
+    })
     setDeleteMessageModal(false);
   },[selectedMessageIndex]);
 
@@ -44,13 +45,15 @@ const MessageList: React.FC<MessageListProps> = ({
   ) => {
     setEditMessageModal(false);
     if (newMessageContent === messageList[selectedMessageIndex].content) return;
-    const newMessageList = [...messageList];
-    newMessageList[selectedMessageIndex] = {
-      ...newMessageList[selectedMessageIndex],
-      content: newMessageContent ?? "",
-      sentTime: "Edited " + getCurrentTime(),
-    };
-    setMessageList(newMessageList);
+
+    conversationDispatch({
+      type: "edit_message",
+      newMessage: {
+        ...messageList[selectedMessageIndex],
+        content: newMessageContent ?? "",
+        sentTime: "Edited " + getCurrentTime(),
+      }
+    });
   },[messageList, selectedMessageIndex]);
 
   return (

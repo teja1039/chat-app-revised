@@ -5,26 +5,26 @@ import React, { memo } from "react";
 
 interface UserCardProps {
   user: Contact,
-  isCurrentUser: boolean,
+  isCurrentContact: boolean,
   isCompact: boolean,
-  setCurrentUser: React.Dispatch<React.SetStateAction<User>>,
+  setCurrentContact: React.Dispatch<React.SetStateAction<User>>,
   handleDeleteUser: (index: string) => void
 }
 
 const UserCard: React.FC<UserCardProps> = ({
   user,
-  isCurrentUser,
+  isCurrentContact,
   isCompact,
-  setCurrentUser,
+  setCurrentContact,
   handleDeleteUser,
 }) => {
   return (
     <>
       <div
-        className={"user-card" + (isCurrentUser ? " focus-user-card" : "")}
+        className={"user-card" + (isCurrentContact ? " focus-user-card" : "")}
         onClick={(e) => {
           e.stopPropagation();
-          setCurrentUser(user);
+          setCurrentContact(user);
         }}
       >
         <UserProfile

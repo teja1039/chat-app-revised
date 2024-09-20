@@ -7,7 +7,6 @@ import {
 import React from "react";
 
 export const ContactListContext = createContext<ContactList>([]);
-
 export const ContactListDispatchContext = createContext<
   React.Dispatch<ContactListAction>
 >(() => {

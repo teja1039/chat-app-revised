@@ -1,20 +1,20 @@
 import { User } from "../../Common/types/types";
 import { useCallback, useState } from "react";
 import Modal, { ModalType } from "../../Common/Modal/Modal";
-import { DEFAULT_USER } from "../../Common/constants";
+import { DEFAULT_CONTACT } from "../../Common/constants";
 import { setMessageListToLocalStorage } from "../../Common/localStorageFunctions";
 import UserCard from "./UserCard/UserCard";
 import { useContactList, useContactListDipatch } from "../../MainContainer/ContactListProvider";
 
 interface UserListProps {
-  currentUser: User;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
+  currentContact: User;
+  setCurrentContact: React.Dispatch<React.SetStateAction<User>>;
   isCompact: boolean;
 }
 
 const UserList: (userListPros: UserListProps) => JSX.Element = ({
-  currentUser,
-  setCurrentUser,
+  currentContact,
+  setCurrentContact,
   isCompact,
 }) => {
 
@@ -33,10 +33,10 @@ const UserList: (userListPros: UserListProps) => JSX.Element = ({
       type: 'delete_contact',
       id: selectedUserId,
     });
-    if (selectedUserId === currentUser.id) setCurrentUser(DEFAULT_USER);
+    if (selectedUserId === currentContact.id) setCurrentContact(DEFAULT_CONTACT);
     setMessageListToLocalStorage(selectedUserId, []);
     setDeleteUserModal(false);
-  }, [selectedUserId, currentUser]);
+  }, [selectedUserId, currentContact]);
 
   return (
     <div className="user-list">
@@ -45,9 +45,9 @@ const UserList: (userListPros: UserListProps) => JSX.Element = ({
           <UserCard
             user={contact}
             key={contact.id}
-            isCurrentUser = {currentUser.id === contact.id}
+            isCurrentContact = {currentContact.id === contact.id}
             isCompact={isCompact}
-            setCurrentUser={setCurrentUser}
+            setCurrentContact={setCurrentContact}
             handleDeleteUser={handleDeleteUser}
           />
         );
