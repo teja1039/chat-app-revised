@@ -2,7 +2,7 @@ import { useState, useRef, memo } from "react";
 import { Message } from "../../Common/types/types";
 import { getCurrentTime } from "../../Common/util";
 import { v4 as uuidv4 } from "uuid";
-import { useMessageListDispatch } from "../MessageListProvider";
+import { useMessageListDispatch } from "../MessageList/MessageListProvider";
 
 interface MessageInputProps {
   scrollToBottom: () => void;

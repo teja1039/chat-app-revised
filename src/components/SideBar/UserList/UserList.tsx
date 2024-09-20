@@ -1,13 +1,10 @@
-import { User } from "../../Common/types/types";
+import { Contact, User } from "../../Common/types/types";
 import { useCallback, useState } from "react";
 import Modal, { ModalType } from "../../Common/Modal/Modal";
 import { DEFAULT_USER } from "../../Common/constants";
 import { setMessageListToLocalStorage } from "../../Common/localStorageFunctions";
 import UserCard from "./UserCard/UserCard";
-import {
-  useContactList,
-  useContactListDipatch,
-} from "../../MainContainer/ContactListProvider";
+import { useContactList, useContactListDipatch } from "./ContactListProvider";
 import {
   useCurrentUser,
   useCurrentUserSetState,

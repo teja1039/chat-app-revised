@@ -6,7 +6,7 @@ import MessageItem from "./MessageItem/MessageItem";
 import {
   useMessageList,
   useMessageListDispatch,
-} from "../MessageListProvider";
+} from "./MessageListProvider";
 
 interface MessageListProps {
   isCompact: boolean;

@@ -4,7 +4,7 @@ import Modal, { ModalType } from "../Common/Modal/Modal";
 import { v4 as uuidv4 } from "uuid";
 import SideBarHeader from "./SideBarHeader/SideBarHeader";
 import NewUserButton from "./NewUserButton/NewUserButton";
-import { useContactListDipatch } from "../MainContainer/ContactListProvider";
+import { useContactListDipatch } from "./UserList/ContactListProvider";
 
 interface SideBarProps {
   isCompact: boolean;

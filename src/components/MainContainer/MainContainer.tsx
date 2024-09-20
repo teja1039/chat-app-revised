@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SideBar from "../SideBar/SideBar";
 import ChatWindow from "../ChatWindow/ChatWindow";
-import { ContactListProvider } from "./ContactListProvider";
+import { ContactListProvider } from "../SideBar/UserList/ContactListProvider";
 import { CurrentUserProvider } from "./CurrentUserProvider";
 
 const MainContainer: () => JSX.Element = () => {
@@ -15,7 +15,6 @@ const MainContainer: () => JSX.Element = () => {
             isCompact={isCompact}
             setIsCompact={setIsCompact}
           />
-
           <ChatWindow isCompact={isCompact} />
         </div>
       </CurrentUserProvider>

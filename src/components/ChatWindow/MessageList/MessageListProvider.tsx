@@ -6,14 +6,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Contact, Message, MessageList, User } from "../Common/types/types";
+import { Contact, Message, MessageList, User } from "../../Common/types/types";
 import {
   getMessageListFromLocalStorage,
   setMessageListToLocalStorage,
-} from "../Common/localStorageFunctions";
-import { DEFAULT_USER } from "../Common/constants";
-import { useContactListDipatch } from "../MainContainer/ContactListProvider";
-import { useCurrentUser } from "../MainContainer/CurrentUserProvider";
+} from "../../Common/localStorageFunctions";
+import { useContactListDipatch } from "../../SideBar/UserList/ContactListProvider";
+import { useCurrentUser } from "../../MainContainer/CurrentUserProvider";
 
 const MessageListContext = createContext<MessageList>([]);
 const MessageListDispatchContext = createContext<

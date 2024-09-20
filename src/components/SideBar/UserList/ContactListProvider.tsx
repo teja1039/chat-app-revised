@@ -5,11 +5,11 @@ import {
   useContext,
   useEffect,
 } from "react";
-import { Contact, ContactList, Message } from "../Common/types/types";
+import { Message, ContactList } from "../../Common/types/types";
 import {
   getContactListFromLocalStorage,
   setContactListToLocalStorage,
-} from "../Common/localStorageFunctions";
+} from "../../Common/localStorageFunctions";
 import React from "react";
 
 export const ContactListContext = createContext<ContactList>([]);
