@@ -2,7 +2,7 @@ import MessageList from "./MessageList/MessageList";
 import MessageInput from "./MessageInput/MessageInput";
 import React, { useCallback, useRef } from "react";
 import ChatWindowHeader from "./ChatWindowHeader/ChatWindowHeader";
-import { MessageListProvider } from "../MainContainer/MessageListProvider";
+import { MessageListProvider } from "./MessageListProvider";
 import { useCurrentUser } from "../MainContainer/CurrentUserProvider";
 
 interface ChatWindowProps {
