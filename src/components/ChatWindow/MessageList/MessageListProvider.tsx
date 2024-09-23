@@ -77,6 +77,7 @@ const messageListReducer: MessageListReducer = (messageList, action) => {
     }
 
     case "add_message": {
+      console.log("MESSAGE LIST REDUCER RUNNING...")
       return action.newMessage
         ? [...messageList, { ...action.newMessage }]
         : messageList;

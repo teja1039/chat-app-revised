@@ -376,10 +376,9 @@
 .tooltip-container {
   visibility: hidden;
   position: fixed;
-  max-width: 500px;
+  max-width: 1000px;
   background-color: #333;
   padding: 1em;
-  margin-left: 5em;
   border-radius: 1em;
   z-index: 5;
 }

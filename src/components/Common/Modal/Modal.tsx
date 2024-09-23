@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, ReactNode, useState } from "react";
 
 export const enum ModalType {
   InputUserNameModal = 1,
@@ -23,9 +23,14 @@ const GenericModal: (genericModalProps: GenericModalProps) => JSX.Element = ({
 }) => {
   const [inputValue, setInputValue] = useState(inputValuePlaceholder);
   return (
-    <div className="modal">
-      <div className="modal-content">
-        {question && <p className="modal-quesion">{question}</p>}
+    <Container className="modal">
+      <Container className="modal-content">
+        {question && (
+          <Container className="modal-quesion">
+            <p>{question}</p>
+          </Container>
+        )}
+
         {Boolean(inputPlaceholder) && (
           <textarea
             value={inputValue}
@@ -34,7 +39,7 @@ const GenericModal: (genericModalProps: GenericModalProps) => JSX.Element = ({
             onChange={(e) => setInputValue(e.target.value)}
           />
         )}
-        <div className="modal-buttons">
+        <Container className="modal-buttons">
           <button
             className="save-button"
             onClick={() => onSave(inputValue)}
@@ -47,9 +52,9 @@ const GenericModal: (genericModalProps: GenericModalProps) => JSX.Element = ({
           >
             Cancel
           </button>
-        </div>
-      </div>
-    </div>
+        </Container>
+      </Container>
+    </Container>
   );
 };
 
@@ -95,7 +100,26 @@ const Modal: (modalProps: ModalProps) => React.JSX.Element = ({
         />
       );
   }
-  return <></>;
+  return (
+    <Container className="modal-container">
+      <Container className="modal-question">Are you sure ? </Container>
+      <Container
+        className="modal-input"
+        inputPlaceholder="Type the message here"
+        inputPlaceholdervalue=""
+      ></Container>
+    </Container>
+  );
+};
+
+interface ContainerProps {
+  children?: ReactNode;
+  className: string;
+  inputPlaceholder?: string;
+  inputPlaceholdervalue?: string;
+}
+const Container: React.FC<ContainerProps> = ({ className, children }) => {
+  return <div className={className}>{children}</div>;
 };
 
 export default memo(Modal);
