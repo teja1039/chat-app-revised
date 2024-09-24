@@ -6,7 +6,7 @@ import MessageItem from "./MessageItem/MessageItem";
 import {
   useMessageList,
   useMessageListDispatch,
-} from "./MessageListProvider";
+} from "../../ContextProviders/MessageListProvider/MessageListProvider";
 
 interface MessageListProps {
   isCompact: boolean;
@@ -45,7 +45,7 @@ const MessageList: React.FC<MessageListProps> = ({
   const handleRemoveMessageModal = () => {
     messageListDispatch({
       type: "delete_message",
-      newMessage: messageList[selectedMessageIndex],
+      messageId: messageList[selectedMessageIndex].id,
     });
     setDeleteMessageModal(false);
   };
@@ -59,7 +59,7 @@ const MessageList: React.FC<MessageListProps> = ({
 
     messageListDispatch({
       type: "edit_message",
-      newMessage: {
+      editedMessage: {
         ...messageList[selectedMessageIndex],
         content: newMessageContent ?? "",
         sentTime: "Edited " + getCurrentTime(),

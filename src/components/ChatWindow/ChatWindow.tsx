@@ -2,8 +2,8 @@ import MessageList from "./MessageList/MessageList";
 import MessageInput from "./MessageInput/MessageInput";
 import React, { useCallback, useRef } from "react";
 import ChatWindowHeader from "./ChatWindowHeader/ChatWindowHeader";
-import { MessageListProvider } from "./MessageList/MessageListProvider";
-import { useCurrentUser } from "../MainContainer/CurrentUserProvider";
+import { MessageListProvider } from "../ContextProviders/MessageListProvider/MessageListProvider";
+import { useCurrentUser } from "../ContextProviders/CurrentUserProvider";
 
 interface ChatWindowProps {
   isCompact: boolean;

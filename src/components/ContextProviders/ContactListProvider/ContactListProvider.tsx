@@ -11,17 +11,17 @@ import {
   setContactListToLocalStorage,
 } from "../../Common/localStorageFunctions";
 import React from "react";
+import {
+  ContactListDispatch,
+  ContactListProviderProps,
+  ContactListReducer,
+} from "./types";
 
 export const ContactListContext = createContext<ContactList>([]);
-export const ContactListDispatchContext = createContext<
-  React.Dispatch<ContactListAction>
->(() => {
-  console.warn("Dispatch function not provided");
-});
+export const ContactListDispatchContext = createContext<ContactListDispatch>(
+  () => console.warn("Dispatch function not provided")
+);
 
-interface ContactListProviderProps {
-  children: ReactNode;
-}
 export const ContactListProvider: React.FC<ContactListProviderProps> = ({
   children,
 }) => {
@@ -51,23 +51,14 @@ export const useContactListDipatch = () => {
   return useContext(ContactListDispatchContext);
 };
 
-interface ContactListAction {
-  type: string,
-  id: string,
-  name?: string,
-  lastMessage?: Message,
-}
-interface ContactListReducer {
-  (contactList: ContactList, action: ContactListAction): ContactList;
-}
 const contactListReducer: ContactListReducer = (contactList, action) => {
   switch (action.type) {
     case "add_contact": {
       return [
         ...contactList,
         {
-          id: action.id,
-          name: action.name ?? "No User Name Given",
+          id: action.userId,
+          name: action.userName,
           profileImg:
             "https://fastly.picsum.photos/id/297/200/300.jpg?hmac=SF0Y51mRP7i6CoLBIuliqQwDIUJNyf63_r3xhamVSLE",
         },
@@ -75,19 +66,15 @@ const contactListReducer: ContactListReducer = (contactList, action) => {
     }
 
     case "delete_contact": {
-      return [...contactList].filter((contact) => contact.id !== action.id);
+      return [...contactList].filter((contact) => contact.id !== action.userId);
     }
 
     case "change_last_message": {
       return [...contactList].map((contact) =>
-        contact.id === action.id
+        contact.id === action.userId
           ? { ...contact, lastMessage: action.lastMessage }
           : contact
       );
-    }
-
-    default: {
-      throw Error("Unkown action: " + action.type);
     }
   }
 };

@@ -4,11 +4,11 @@ import Modal, { ModalType } from "../../Common/Modal/Modal";
 import { DEFAULT_USER } from "../../Common/constants";
 import { setMessageListToLocalStorage } from "../../Common/localStorageFunctions";
 import UserCard from "./UserCard/UserCard";
-import { useContactList, useContactListDipatch } from "./ContactListProvider";
+import { useContactList, useContactListDipatch } from "../../ContextProviders/ContactListProvider/ContactListProvider";
 import {
   useCurrentUser,
   useCurrentUserSetState,
-} from "../../MainContainer/CurrentUserProvider";
+} from "../../ContextProviders/CurrentUserProvider";
 
 interface UserListProps {
   isCompact: boolean;
@@ -32,7 +32,7 @@ const UserList: (userListPros: UserListProps) => JSX.Element = ({
   const handleDeleteUserModal = useCallback(() => {
     contactListDispatch({
       type: "delete_contact",
-      id: selectedUserId,
+      userId: selectedUserId,
     });
     if (selectedUserId === currentUser.id) setCurrentUser(DEFAULT_USER);
     setMessageListToLocalStorage(selectedUserId, []);
