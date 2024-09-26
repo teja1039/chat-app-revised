@@ -1,10 +1,13 @@
 import { Contact, User } from "../../Common/types/types";
 import { useCallback, useState } from "react";
-import Modal, { ModalType } from "../../Common/Modal/Modal";
+import { ConfirmationModal } from "../../Common/Modal/Modal";
 import { DEFAULT_USER } from "../../Common/constants";
 import { setMessageListToLocalStorage } from "../../Common/localStorageFunctions";
 import UserCard from "./UserCard/UserCard";
-import { useContactList, useContactListDipatch } from "../../ContextProviders/ContactListProvider/ContactListProvider";
+import {
+  useContactList,
+  useContactListDipatch,
+} from "../../ContextProviders/ContactListProvider/ContactListProvider";
 import {
   useCurrentUser,
   useCurrentUserSetState,
@@ -53,12 +56,10 @@ const UserList: (userListPros: UserListProps) => JSX.Element = ({
           />
         );
       })}
-
       {deleteUserModal && (
-        <Modal
-          type={ModalType.DeleteModal}
-          onSave={handleDeleteUserModal}
-          onCancel={setDeleteUserModal}
+        <ConfirmationModal
+          onConfirm={handleDeleteUserModal}
+          onCancel={() => setDeleteUserModal(false)}
         />
       )}
     </div>

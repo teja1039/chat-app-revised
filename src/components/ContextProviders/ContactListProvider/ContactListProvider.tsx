@@ -1,11 +1,10 @@
 import {
   useReducer,
   createContext,
-  ReactNode,
   useContext,
   useEffect,
 } from "react";
-import { Message, ContactList } from "../../Common/types/types";
+import { ContactList } from "../../Common/types/types";
 import {
   getContactListFromLocalStorage,
   setContactListToLocalStorage,

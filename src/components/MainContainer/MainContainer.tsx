@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import SideBar from "../SideBar/SideBar";
-import ChatWindow from "../ChatWindow/ChatWindow";
 import { ContactListProvider } from "../ContextProviders/ContactListProvider/ContactListProvider";
 import { CurrentUserProvider } from "../ContextProviders/CurrentUserProvider";
 
@@ -15,11 +14,24 @@ const MainContainer: () => JSX.Element = () => {
             isCompact={isCompact}
             setIsCompact={setIsCompact}
           />
-          <ChatWindow isCompact={isCompact} />
+          <Suspense fallback = {<ChatWindowFallback/>}>
+            <ChatWindow isCompact={isCompact} />
+          </Suspense>
         </div>
       </CurrentUserProvider>
     </ContactListProvider>
   );
 };
 
+
+const ChatWindow = lazy(() => import("../ChatWindow/ChatWindow"));
+const ChatWindowFallback = () => {
+  return (
+    <div style={{
+      fontSize : 24,
+      alignContent : "center",
+      justifyContent : "center"
+    }}>Loading...</div>
+  );
+}
 export default MainContainer;

@@ -3,6 +3,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Contact, User } from "../../../Common/types/types";
 import React, { memo } from "react";
 
+function removeEditedPrefix(timeString ?: string) {
+  if(!timeString) return '';
+  return timeString.replace(/^Edited\s*/, '');
+}
+
 interface UserCardProps {
   user: Contact,
   isCurrentContact: boolean,
@@ -41,7 +46,7 @@ const UserCard: React.FC<UserCardProps> = ({
           >
             <DeleteIcon fontSize="inherit" />
           </button>
-          {isCompact || <p className="timestamp">{user.lastMessage?.sentTime}</p>}
+          {isCompact || <p className="timestamp">{removeEditedPrefix(user.lastMessage?.sentTime)}</p>}
         </div>
       </div>
     </>

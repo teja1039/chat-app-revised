@@ -1,6 +1,5 @@
-import { useCallback, useRef, useState } from "react";
-import { Message } from "../../Common/types/types";
-import Modal, { ModalType } from "../../Common/Modal/Modal";
+import { useState } from "react";
+import { ConfirmationModal, InputModal } from "../../Common/Modal/Modal";
 import { getCurrentTime } from "../../Common/util";
 import MessageItem from "./MessageItem/MessageItem";
 import {
@@ -55,7 +54,7 @@ const MessageList: React.FC<MessageListProps> = ({
     newMessageContent
   ) => {
     setEditMessageModal(false);
-    if (newMessageContent === messageList[selectedMessageIndex].content) return;
+    if (!newMessageContent || newMessageContent === messageList[selectedMessageIndex].content) return;
 
     messageListDispatch({
       type: "edit_message",
@@ -84,19 +83,17 @@ const MessageList: React.FC<MessageListProps> = ({
       </div>
 
       {deleteMessageModal && (
-        <Modal
-          type={ModalType.DeleteModal}
-          onSave={handleRemoveMessageModal}
-          onCancel={setDeleteMessageModal}
+        <ConfirmationModal
+          onConfirm={handleRemoveMessageModal}
+          onCancel={() => setDeleteMessageModal(false)}
         />
       )}
 
       {editMessageModal && (
-        <Modal
-          type={ModalType.EditMessageModal}
-          inputValue={messageList[selectedMessageIndex].content}
+        <InputModal
+          inputDefaultValue={messageList[selectedMessageIndex]?.content}
           onSave={handleEditMessageModal}
-          onCancel={setEditMessageModal}
+          onCancel={() => setEditMessageModal(false)}
         />
       )}
     </>

@@ -1,125 +1,156 @@
-import React, { memo, ReactNode, useState } from "react";
+import React, { memo, ReactNode, useEffect, useRef, useState } from "react";
 
-export const enum ModalType {
-  InputUserNameModal = 1,
-  DeleteModal,
-  EditMessageModal,
-}
-
-interface GenericModalProps {
-  question?: string;
-  inputValuePlaceholder?: string;
-  inputPlaceholder?: string;
-  onSave: (inputText?: string) => void;
-  onCancel: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const GenericModal: (genericModalProps: GenericModalProps) => JSX.Element = ({
-  question,
-  inputValuePlaceholder,
-  inputPlaceholder,
-  onSave,
-  onCancel,
-}) => {
-  const [inputValue, setInputValue] = useState(inputValuePlaceholder);
-  return (
-    <Container className="modal">
-      <Container className="modal-content">
-        {question && (
-          <Container className="modal-quesion">
-            <p>{question}</p>
-          </Container>
-        )}
-
-        {Boolean(inputPlaceholder) && (
-          <textarea
-            value={inputValue}
-            placeholder={inputPlaceholder}
-            className="modal-input"
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-        )}
-        <Container className="modal-buttons">
-          <button
-            className="save-button"
-            onClick={() => onSave(inputValue)}
-          >
-            Save
-          </button>
-          <button
-            className="cancel-button"
-            onClick={() => onCancel(false)}
-          >
-            Cancel
-          </button>
-        </Container>
-      </Container>
-    </Container>
-  );
-};
+type FocusableElement =
+  | HTMLInputElement
+  | HTMLButtonElement
+  | HTMLTextAreaElement
+  | HTMLAnchorElement
+  | HTMLSelectElement;
 
 interface ModalProps {
-  type: ModalType;
-  onSave: (inputValue?: string) => void;
-  onCancel: React.Dispatch<React.SetStateAction<boolean>>;
-  inputValue?: string;
+  children?: ReactNode;
 }
+export const Modal: React.FC<ModalProps> = ({ children }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
 
-const Modal: (modalProps: ModalProps) => React.JSX.Element = ({
-  type,
-  onSave,
-  onCancel,
-  inputValue,
-}) => {
-  switch (type) {
-    case ModalType.InputUserNameModal:
-      return (
-        <GenericModal
-          inputPlaceholder="Name of the User..."
-          onSave={onSave}
-          onCancel={onCancel}
-        />
-      );
+  useEffect(() => {
+    if (!modalRef.current) return;
 
-    case ModalType.DeleteModal:
-      return (
-        <GenericModal
-          question="Are you sure ?"
-          onSave={onSave}
-          onCancel={onCancel}
-        />
-      );
+    const handleKeyDown = (e : KeyboardEvent) => {
+      if (e.key === "Tab") {
+        if (!modalRef.current) return;
 
-    case ModalType.EditMessageModal:
-      return (
-        <GenericModal
-          inputPlaceholder="Edit your message here..."
-          inputValuePlaceholder={inputValue}
-          onSave={onSave}
-          onCancel={onCancel}
-        />
-      );
-  }
+        const focusableElements = modalRef.current.querySelectorAll(
+          'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+        ) as NodeListOf<FocusableElement>;
+        
+        const firstFocusableElement = focusableElements[0];
+        const lastFocusableElement =
+          focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstFocusableElement) {
+            lastFocusableElement.focus();
+            e.preventDefault();
+          }
+        } else {
+          if (document.activeElement === lastFocusableElement) {
+            firstFocusableElement.focus();
+            e.preventDefault();
+          }
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
-    <Container className="modal-container">
-      <Container className="modal-question">Are you sure ? </Container>
-      <Container
-        className="modal-input"
-        inputPlaceholder="Type the message here"
-        inputPlaceholdervalue=""
-      ></Container>
-    </Container>
+    <div
+      className="modal"
+      ref={modalRef}
+      tabIndex={-1}
+    >
+      <div className="modal-content">{children}</div>
+    </div>
   );
 };
 
-interface ContainerProps {
-  children?: ReactNode;
-  className: string;
-  inputPlaceholder?: string;
-  inputPlaceholdervalue?: string;
+interface ModalButtonProps {
+  className?: string;
+  buttonName: string;
+  onClick: () => void;
 }
-const Container: React.FC<ContainerProps> = ({ className, children }) => {
-  return <div className={className}>{children}</div>;
+export const ModalButton: React.FC<ModalButtonProps> = ({
+  className = "modal-button",
+  buttonName,
+  onClick,
+}) => {
+  return (
+    <button
+      className={className}
+      onClick={onClick}
+    >
+      {buttonName}
+    </button>
+  );
 };
 
-export default memo(Modal);
+interface ModalButtonsContainerProps {
+  children?: ReactNode;
+}
+export const ModalButtonsContainer: React.FC<ModalButtonsContainerProps> = ({
+  children,
+}) => {
+  return <div className="modal-buttons-container">{children}</div>;
+};
+
+interface InputModalProps extends ModalProps {
+  onSave: (inputValue: string) => void;
+  onCancel: () => void;
+  inputPlaceholder?: string;
+  inputDefaultValue?: string;
+}
+export const InputModal: React.FC<InputModalProps> = ({
+  onSave,
+  onCancel,
+  inputPlaceholder = "Enter text here...",
+  inputDefaultValue = "",
+}) => {
+  const [inputValue, setInputValue] = useState(inputDefaultValue);
+
+  const handleSave = () => {
+    onSave(inputValue);
+  };
+
+  return (
+    <Modal>
+      <textarea
+        className="modal-input"
+        placeholder={inputPlaceholder}
+        onChange={(e) => setInputValue(e.target.value)}
+      >
+        {inputDefaultValue}
+      </textarea>
+      <ModalButtonsContainer>
+        <ModalButton
+          buttonName="Save"
+          onClick={handleSave}
+        />
+        <ModalButton
+          buttonName="Cancel"
+          onClick={onCancel}
+        />
+      </ModalButtonsContainer>
+    </Modal>
+  );
+};
+
+interface ConfirmationModalPorps extends ModalProps {
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+export const ConfirmationModal: React.FC<ConfirmationModalPorps> = ({
+  onConfirm,
+  onCancel,
+}) => {
+  return (
+    <Modal>
+      <p>Are you sure ?</p>
+      <ModalButtonsContainer>
+        <ModalButton
+          buttonName="Save"
+          onClick={onConfirm}
+        />
+        <ModalButton
+          buttonName="Cancel"
+          onClick={onCancel}
+        />
+      </ModalButtonsContainer>
+    </Modal>
+  );
+};
