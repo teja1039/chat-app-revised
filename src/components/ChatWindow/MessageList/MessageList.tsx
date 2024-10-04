@@ -69,12 +69,14 @@ const MessageList: React.FC<MessageListProps> = ({
   return (
     <>
       <div
+        data-testid = "message-list"
         className="message-list"
         ref={messageListRef}
       >
         {messageList.map((message, index) => (
           <MessageItem
             message={message}
+            key={message.id}
             index={index}
             isCompact={isCompact}
             handleClick={handleClick}

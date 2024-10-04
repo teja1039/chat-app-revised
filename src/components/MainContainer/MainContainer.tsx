@@ -30,7 +30,8 @@ const ChatWindowFallback = () => {
     <div style={{
       fontSize : 24,
       alignContent : "center",
-      justifyContent : "center"
+      justifyContent : "center",
+      textAlign: "center"
     }}>Loading...</div>
   );
 }
