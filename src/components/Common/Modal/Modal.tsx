@@ -54,6 +54,7 @@ export const Modal: React.FC<ModalProps> = ({ children }) => {
       className="modal"
       ref={modalRef}
       tabIndex={-1}
+      data-testid = "modal"
     >
       <div className="modal-content">{children}</div>
     </div>
@@ -109,13 +110,14 @@ export const InputModal: React.FC<InputModalProps> = ({
 
   return (
     <Modal>
+      <label htmlFor="modal-input">Input:</label>
       <textarea
+        id = "modal-input"
         className="modal-input"
         placeholder={inputPlaceholder}
+        defaultValue={inputDefaultValue}
         onChange={(e) => setInputValue(e.target.value)}
-      >
-        {inputDefaultValue}
-      </textarea>
+      />
       <ModalButtonsContainer>
         <ModalButton
           buttonName="Save"

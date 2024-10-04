@@ -43,7 +43,7 @@ const UserList: (userListPros: UserListProps) => JSX.Element = ({
   }, [selectedUserId, currentUser.id]);
 
   return (
-    <div className="user-list">
+    <div className="user-list" data-testid = "user-list">
       {contactList.map((contact) => {
         return (
           <UserCard

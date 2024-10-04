@@ -28,7 +28,7 @@ const SideBar: React.FC<SideBarProps> = ({ isCompact, setIsCompact }) => {
   }, []);
 
   return (
-    <div className="sidebar">
+    <div className="sidebar" data-testid = "sidebar">
       <SideBarHeader setIsCompact={setIsCompact} />
       <NewUserButton setNewUserModal={setNewUserModal} />
       <UserList isCompact={isCompact} />
