@@ -8,7 +8,7 @@ interface ChatWindowHeaderProps {
 
 const ChatWindowHeader: React.FC<ChatWindowHeaderProps> = ({user}) => {
   return (
-    <div className="chat-window-header">
+    <div className="chat-window-header" data-testid = "chat-window-header">
       <UserProfile user={user} />
     </div>
   );
