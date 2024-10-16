@@ -61,7 +61,7 @@ describe("SideBar when NewUserButton is clicked", () => {
     const userNameInputElem = screen.getByLabelText(/input/i);
     await userEvent.type(userNameInputElem, userName);
     await userEvent.click(screen.getByRole("button", { name: /save/i }));
-
+    screen.debug();
     expect(screen.getByText(userName)).toBeInTheDocument();
   });
 

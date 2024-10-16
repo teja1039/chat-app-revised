@@ -36,7 +36,7 @@ describe("ChatWindow Component", () => {
 
   it("adds message to MessageList when sent", async () => {
     const InputMessageElem = await screen.findByPlaceholderText(/message/i);
-    const SendButton = await screen.findByRole("button", {name:/send/i})
+    const SendButton = await screen.findByRole("button", { name: /send/i });
     const newMessage = "New Message - " + uuidv4();
 
     await userEvent.type(InputMessageElem, newMessage);
@@ -46,4 +46,11 @@ describe("ChatWindow Component", () => {
 
     expect(newMessageElem).toBeInTheDocument();
   });
+
+  it("removes message that is deleted", () => {
+    const newMessage = "ef";
+  });
+  // it("changes message when it is edited");
+  // it("opens a confirmation modal for deleting messsage");
+  // it("opens a modal to edit the message");
 });

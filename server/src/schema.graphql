@@ -1,0 +1,25 @@
+type Query {
+  getMessagesOfUser(userId: ID!): [Message!]!
+  getUser(userId: ID!): User!
+}
+
+type Mutation {
+  deleteMessage(userId: ID!, messageId: ID!): String
+  addMessage(userId: ID!, messageId: ID!, content: String!, time: String!): String
+  updateMessage(userId: ID!, messageId: ID!, content: String!): Message
+  deleteUser(userId: ID!) : String
+  addUser(userId: ID!, name: String!, profileImgUrl: String): String
+}
+
+type User {
+    _id: ID!
+    name: String!
+    profileImgUrl: String
+    messages: [ID!]!
+}
+
+type Message {
+    _id: ID!
+    content: String!
+    time: String!
+}

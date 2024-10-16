@@ -12,6 +12,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, diplayLastMessage }) =>
   return (
     <div
       className="user-profile"
+      data-testid = "user-profile"
     >
       <UserImg imgUrl={user.profileImg} />
       <UserDetails user={user} diplayLastMessage={diplayLastMessage}/>
