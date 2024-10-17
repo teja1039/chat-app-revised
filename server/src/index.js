@@ -54,6 +54,12 @@ const resolvers = {
     },
 
     deleteUser: async (_, { userId }) => {
+      const messageIdList = (await db.collection("users").findOne({_id: userId}, {projection: {messages: 1}})).messages ?? [];
+      const messageDeletionPromises = messageIdList.map((id) => {
+          db.collection("messages").deleteOne({ _id: id });
+      })
+
+      await Promise.all(messageDeletionPromises);
       await db.collection("users").deleteOne({ _id: userId });
       return "User deleted";
     },
@@ -62,7 +68,7 @@ const resolvers = {
       await db.collection("messages").deleteOne({ _id: messageId });
       await db
         .collection("users")
-        .updateOne({ _id: userId }, { $pull: { messages: ObjectId.createFromTime(messageId) } });
+        .updateOne({ _id: userId }, { $pull: { messages: messageId } });
 
       return "Message Deleted";
     },
