@@ -10,6 +10,10 @@ const resolvers = {
       return await db.collection("users").findOne({ _id: userId });
     },
 
+    getUsers: async () => {
+      return await db.collection("users").find({}).toArray();
+    },
+    
     getMessagesOfUser: async (_, { userId }) => {
       const user = await db
         .collection("users")
@@ -44,7 +48,7 @@ const resolvers = {
 
       await db
         .collection("users")
-        .updateOne({ _id: userId }, { $push: { messages: ObjectId.createFromTime(messageId) } });
+        .updateOne({ _id: userId }, { $push: { messages: messageId } });
 
       return "Message added";
     },
@@ -67,7 +71,7 @@ const resolvers = {
       await db
         .collection("messages")
         .updateOne({ _id: messageId }, { $set: { content } });
-      return await db.collection("messages").findOne({ _id: messageId });
+      return "Message updated";
     },
   },
 };

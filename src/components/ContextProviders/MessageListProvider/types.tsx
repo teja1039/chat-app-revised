@@ -8,7 +8,6 @@ export interface MessageListProviderProps {
 }
 
 export type MessageListAction =
-  | SyncWithLocalStorage
   | AddMessage
   | DeleteMessage
   | EditMessage;

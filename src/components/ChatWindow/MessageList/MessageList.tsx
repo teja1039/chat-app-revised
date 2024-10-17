@@ -2,10 +2,10 @@ import { useState } from "react";
 import { ConfirmationModal, InputModal } from "../../Common/Modal/Modal";
 import { getCurrentTime } from "../../Common/util";
 import MessageItem from "./MessageItem/MessageItem";
-import {
-  useMessageList,
-  useMessageListDispatch,
-} from "../../ContextProviders/MessageListProvider/MessageListProvider";
+import { useMutation, useQuery } from "@apollo/client";
+import { DELETE_MESSAGE, GET_MESSAGES, UPDATE_MESSAGE } from "../../../graphQueries";
+import { Message } from "../../Common/types/types";
+import { useCurrentUser } from "../../ContextProviders/CurrentUserProvider";
 
 interface MessageListProps {
   isCompact: boolean;
@@ -16,11 +16,22 @@ const MessageList: React.FC<MessageListProps> = ({
   isCompact,
   messageListRef,
 }) => {
+  const currentUserId = useCurrentUser().id;
   const [deleteMessageModal, setDeleteMessageModal] = useState(false);
   const [editMessageModal, setEditMessageModal] = useState(false);
   const [selectedMessageIndex, setSeletedMessageIndex] = useState<number>(-1);
-  const messageListDispatch = useMessageListDispatch();
-  const messageList = useMessageList();
+
+  const [deleteMessage] = useMutation(DELETE_MESSAGE, {
+    refetchQueries: [{query: GET_MESSAGES, variables: {userId: currentUserId}}]
+  });
+  const [updateMessage] = useMutation(UPDATE_MESSAGE, {
+    refetchQueries: [{query: GET_MESSAGES, variables: {userId: currentUserId}}]
+  });
+  const {loading, error, data} = useQuery(GET_MESSAGES, {
+    variables: {
+      userId: currentUserId
+    }
+  });
 
   const handleClick = (action: { type: string; index: number }) => {
     setSeletedMessageIndex(action.index);
@@ -42,10 +53,10 @@ const MessageList: React.FC<MessageListProps> = ({
   };
 
   const handleRemoveMessageModal = () => {
-    messageListDispatch({
-      type: "delete_message",
-      messageId: messageList[selectedMessageIndex].id,
-    });
+    deleteMessage({variables: {
+      userId: currentUserId,
+      messageId: messageList[selectedMessageIndex].id
+    }})
     setDeleteMessageModal(false);
   };
 
@@ -56,15 +67,18 @@ const MessageList: React.FC<MessageListProps> = ({
     setEditMessageModal(false);
     if (!newMessageContent || newMessageContent === messageList[selectedMessageIndex].content) return;
 
-    messageListDispatch({
-      type: "edit_message",
-      editedMessage: {
-        ...messageList[selectedMessageIndex],
-        content: newMessageContent ?? "",
-        sentTime: "Edited " + getCurrentTime(),
-      },
-    });
+    updateMessage({variables: {
+      userId: currentUserId,
+      messageId: messageList[selectedMessageIndex].id,
+      content: newMessageContent,
+    }})
   };
+
+
+  if(currentUserId === "default-user") return <div className="message-list"></div>
+  if(loading) return <div className="message-list">Loading...</div>
+  if(error) return <div className="message-list">{error.message}</div>
+  const messageList = data.getMessagesOfUser as Message[];
 
   return (
     <>

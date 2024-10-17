@@ -2,19 +2,20 @@ import { useState, useRef, memo } from "react";
 import { Message } from "../../Common/types/types";
 import { getCurrentTime } from "../../Common/util";
 import { v4 as uuidv4 } from "uuid";
-import { useMessageListDispatch } from "../../ContextProviders/MessageListProvider/MessageListProvider";
+import { useCurrentUser } from "../../ContextProviders/CurrentUserProvider";
 
 interface MessageInputProps {
   scrollToBottom: () => void;
+  addMessage: any;
 }
 
 const MessageInput: React.FC<MessageInputProps> = ({
   scrollToBottom,
+  addMessage
 }) => {
   const [message, setMessage] = useState("");
   const inputMessageRef = useRef<HTMLTextAreaElement>(null);
-
-  const messageListDispatch = useMessageListDispatch();
+  const currentUserId = useCurrentUser().id;
 
   const handleClick = () => {
     if (!message) return;
@@ -23,10 +24,13 @@ const MessageInput: React.FC<MessageInputProps> = ({
       content: message,
       sentTime: getCurrentTime(),
     };
-    messageListDispatch({
-      type: 'add_message',
-      newMessage: newMessage
-    });
+
+    addMessage({variables: {
+      userId: currentUserId,
+      messageId: newMessage.id,
+      content: newMessage.content,
+      time: newMessage.sentTime
+    }})
     scrollToBottom();
     setMessage("");
   };
@@ -52,4 +56,4 @@ const MessageInput: React.FC<MessageInputProps> = ({
   );
 };
 
-export default memo(MessageInput);
+export default MessageInput;

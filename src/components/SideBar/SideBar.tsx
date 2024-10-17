@@ -4,7 +4,9 @@ import { InputModal } from "../Common/Modal/Modal";
 import { v4 as uuidv4 } from "uuid";
 import SideBarHeader from "./SideBarHeader/SideBarHeader";
 import NewUserButton from "./NewUserButton/NewUserButton";
-import { useContactListDipatch } from "../ContextProviders/ContactListProvider/ContactListProvider";
+import { ADD_CONTACT, GET_CONTACTS } from "../../graphQueries";
+import { useMutation } from "@apollo/client";
+import { ContactList } from "../Common/types/types";
 
 interface SideBarProps {
   isCompact: boolean;
@@ -12,17 +14,18 @@ interface SideBarProps {
 }
 
 const SideBar: React.FC<SideBarProps> = ({ isCompact, setIsCompact }) => {
-  const contactListDispatch = useContactListDipatch();
   const [newUserModal, setNewUserModal] = useState(false);
+  const [addContact] = useMutation(ADD_CONTACT, {
+    refetchQueries: [{query: GET_CONTACTS}]
+  });
 
-  const handleNewUser: (userName: string) => void = useCallback((userName) => {
+  const handleNewUser: (userName: string) => void = useCallback(async (userName) => {
     if (!userName) return;
 
-    contactListDispatch({
-      type: "add_contact",
+    await addContact({variables: {
       userId: userName + "_" + uuidv4(),
-      userName: userName,
-    });
+      name: userName
+    }});
 
     setNewUserModal(false);
   }, []);

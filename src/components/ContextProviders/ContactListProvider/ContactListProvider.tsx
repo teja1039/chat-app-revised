@@ -2,14 +2,11 @@ import {
   useReducer,
   createContext,
   useContext,
-  useEffect,
 } from "react";
 import { ContactList } from "../../Common/types/types";
-import {
-  getContactListFromLocalStorage,
-  setContactListToLocalStorage,
-} from "../../Common/localStorageFunctions";
 import React from "react";
+import { useQuery } from "@apollo/client";
+import { GET_CONTACTS } from "../../../graphQueries";
 import {
   ContactListDispatch,
   ContactListProviderProps,
@@ -24,14 +21,11 @@ export const ContactListDispatchContext = createContext<ContactListDispatch>(
 export const ContactListProvider: React.FC<ContactListProviderProps> = ({
   children,
 }) => {
+  const {loading, error, data} = useQuery(GET_CONTACTS);
   const [contactList, dispatch] = useReducer(
     contactListReducer,
-    getContactListFromLocalStorage()
+    data
   );
-
-  useEffect(() => {
-    setContactListToLocalStorage(contactList);
-  }, [contactList]);
 
   return (
     <ContactListContext.Provider value={contactList}>

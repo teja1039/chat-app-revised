@@ -1,11 +1,8 @@
 import { useReducer, createContext, useContext, useEffect } from "react";
 import { MessageList } from "../../Common/types/types";
-import {
-  getMessageListFromLocalStorage,
-  setMessageListToLocalStorage,
-} from "../../Common/localStorageFunctions";
-import { useContactListDipatch } from "../ContactListProvider/ContactListProvider";
 import { useCurrentUser } from "../CurrentUserProvider";
+import {GET_MESSAGES} from "../../../graphQueries"
+import { useQuery } from "@apollo/client";
 import {
   MessageListDispatch,
   MessageListProviderProps,
@@ -29,30 +26,11 @@ export const MessageListProvider: React.FC<MessageListProviderProps> = ({
   children,
 }) => {
   const currentUser = useCurrentUser();
-  const contactListDispatch = useContactListDipatch();
+  const {loading, error, data} = useQuery(GET_MESSAGES);
   const [messageList, messageListDispatch] = useReducer(
     messageListReducer,
-    getMessageListFromLocalStorage(currentUser.id)
+    data
   );
-
-  useEffect(() => {
-    messageListDispatch({
-      type: "sync",
-      userId: currentUser.id,
-    });
-  }, [currentUser.id]);
-
-  useEffect(() => {
-    contactListDispatch({
-      type: "change_last_message",
-      userId: currentUser.id,
-      lastMessage: messageList[messageList.length - 1],
-    });
-  }, [messageList[messageList.length - 1]]);
-
-  useEffect(() => {
-    setMessageListToLocalStorage(currentUser.id, messageList);
-  }, [messageList]);
 
   return (
     <MessageListContext.Provider value={messageList}>
@@ -65,12 +43,6 @@ export const MessageListProvider: React.FC<MessageListProviderProps> = ({
 
 const messageListReducer: MessageListReducer = (messageList, action) => {
   switch (action.type) {
-    case "sync": {
-      return action.userId
-        ? getMessageListFromLocalStorage(action.userId)
-        : messageList;
-    }
-
     case "add_message": {
       return [...messageList, { ...action.newMessage }];
     }
